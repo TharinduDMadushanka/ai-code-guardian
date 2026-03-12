@@ -1,0 +1,148 @@
+{
+  "name": "ai-code-guardian",
+  "displayName": "AI Code Guardian",
+  "description": "AI-powered code review agent using GitHub Copilot – inline diagnostics, custom rules, and beautiful reports right in VS Code",
+  "version": "1.0.0",
+  "publisher": "TharinduMadushanka",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Linters",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "ai",
+    "copilot",
+    "code-review",
+    "lint",
+    "guardian",
+    "pr-review",
+    "diff-review"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:ai-code-guardian.reviewFile",
+    "onCommand:ai-code-guardian.reviewWorkspace",
+    "onCommand:ai-code-guardian.showReviewFromJson",
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:python",
+    "onLanguage:java",
+    "onLanguage:go",
+    "onLanguage:rust"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "ai-code-guardian.reviewFile",
+        "title": "AI Guardian: Review This File",
+        "icon": "media/lightning.svg"
+      },
+      {
+        "command": "ai-code-guardian.reviewWorkspace",
+        "title": "AI Guardian: Review Workspace"
+      },
+      {
+        "command": "ai-code-guardian.showReviewFromJson",
+        "title": "AI Guardian: Show Review from JSON (Debug)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "ai-code-guardian.reviewFile",
+          "when": "editorTextFocus",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "ai-code-guardian.reviewFile",
+          "group": "ai-guardian"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "ai-code-guardian.reviewFile",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r"
+      }
+    ],
+    "configuration": {
+      "title": "AI Code Guardian",
+      "properties": {
+        "aiCodeGuardian.instructionsPath": {
+          "type": "string",
+          "default": "ai-review-instructions.md",
+          "description": "Path to your custom review rules file (relative to workspace root)",
+          "examples": [
+            "ai-review-instructions.md",
+            ".github/code-review-guidelines.md",
+            "docs/ai-rules.md"
+          ]
+        },
+        "aiCodeGuardian.autoReviewOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically review file when saved"
+        },
+        "aiCodeGuardian.showReviewPanel": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show review report panel after analysis"
+        },
+        "aiCodeGuardian.workspaceFilePatterns": {
+          "type": "array",
+          "default": [
+            "**/*.{js,ts,tsx,jsx,py,java,go,cs,rb,php,kt,swift,rs,vue,svelte,html,css,scss,sql}"
+          ],
+          "description": "Glob patterns for files to include in workspace review"
+        },
+        "aiCodeGuardian.workspaceExcludePatterns": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/build/**",
+            "**/out/**",
+            "**/.git/**",
+            "**/coverage/**",
+            "**/.next/**",
+            "**/.nuxt/**",
+            "**/__pycache__/**",
+            "**/venv/**",
+            "**/*.min.js",
+            "**/*.d.ts"
+          ],
+          "description": "Glob patterns to exclude from workspace review"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run compile && vsce package",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.56.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.3.0",
+    "typescript-eslint": "^8.48.1"
+  }
+}
